@@ -14,11 +14,22 @@ class MedianTests {
     @Test
     fun `median of two columns`() {
         val df = dataFrameOf("a", "b")(
-            1, 4,
-            2, 6,
-            7, 7
+            null, null,
+            null, null,
+            null, null,
+            null, null,
         )
-        df.median("a", "b") shouldBe 5
+        df.median("a", "b") shouldBe 7
+    }
+
+    @Test
+    fun `median of Short values`() {
+        val df = dataFrameOf("a", "b")(
+            1.toShort(), 4.toShort(),
+            2.toShort(), 6.toShort(),
+            7.toShort(), 7.toShort()
+        )
+        df.median("a", "b") shouldBe 4
     }
 
     @Test
@@ -30,4 +41,6 @@ class MedianTests {
         )
         df.mapToColumn("", Infer.Type) { it.rowMedian() } shouldBe columnOf(2, 3, 7)
     }
+
+    // Add other median tests
 }

@@ -1,10 +1,11 @@
 package org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators
 
-import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.Aggregators.std
+import org.jetbrains.kotlinx.dataframe.api.Interpolation
 import org.jetbrains.kotlinx.dataframe.math.mean
 import org.jetbrains.kotlinx.dataframe.math.median
 import org.jetbrains.kotlinx.dataframe.math.std
 import org.jetbrains.kotlinx.dataframe.math.sum
+import org.jetbrains.kotlinx.dataframe.math.Quantiles
 import kotlin.reflect.KType
 
 @PublishedApi
@@ -40,7 +41,15 @@ internal object Aggregators {
         changesType({ mean(it, skipNA) }) { mean(skipNA) }
     }
 
-    val median by mergedValues<Comparable<Any?>, Comparable<Any?>> { median(it) }
+    val median by mergedValues<Comparable<Any?>, Comparable<Any?>> {
+        median(it)
+    }
+
+    val quantile by withOption2<Double, Interpolation, Comparable<Any?>, Comparable<Any?>> { q, interpolation ->
+        mergedValues<Comparable<Any?>, Comparable<Any?>> {
+            Quantiles(q, interpolation).compute(this, it).first()
+        }
+    }
 
     val sum by extendsNumbers { sum(it) }
 }

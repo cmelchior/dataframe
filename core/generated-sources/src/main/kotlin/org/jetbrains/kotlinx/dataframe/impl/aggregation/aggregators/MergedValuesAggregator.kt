@@ -14,6 +14,7 @@ internal class MergedValuesAggregator<C : Any, R>(
     override fun aggregate(columns: Iterable<DataColumn<C?>>): R? {
         val commonType = columns.map { it.type() }.commonType()
         val allValues = columns.flatMap { it.values() }
+        println(commonType)
         return aggregateWithType(allValues, commonType)
     }
 
